@@ -120,5 +120,3 @@ A aplicação inclui uma paleta de cores gradiente organizada em:
 - **Resolução**: Funciona em diferentes tamanhos de tela
 
 ---
-
-*Desenvolvido com ❤️ usando React e Material-UI*
