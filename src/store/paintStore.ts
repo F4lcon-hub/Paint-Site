@@ -1,43 +1,46 @@
-/**
- * GERENCIAMENTO DE ESTADO - REDUX STORE
- * 
- * Este arquivo é responsável por todo o gerenciamento de estado da aplicação.
- * Controla: ferramentas, cores, tamanho do pincel, histórico de ações, etc.
- */
-
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-/**
- * Interface que define o estado global da aplicação de pintura
- */
+// O tipo 'pencil' estava faltando
+export type Tool = 'brush' | 'eraser' | 'line' | 'rect' | 'pencil';
+
 interface PaintState {
-  currentTool: string;
+  brushColor: string;
   brushSize: number;
   opacity: number;
-  currentColor: string;
-  recentColors: string[];
+  currentTool: Tool;
+  // Estado para a funcionalidade de desfazer/refazer
   canvasHistory: string[];
   historyIndex: number;
-  isDrawing: boolean;
+  // Estado para as cores recentes
+  recentColors: string[];
 }
 
 const initialState: PaintState = {
-  currentTool: 'brush',
-  brushSize: 10,
+  brushColor: '#000000',
+  brushSize: 5,
   opacity: 1.0,
-  currentColor: '#000000',
-  recentColors: ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'],
+  currentTool: 'brush',
+  // Inicializa o histórico com um estado em branco
   canvasHistory: [],
   historyIndex: -1,
-  isDrawing: false
+  // Preenche com algumas cores recentes padrão
+  recentColors: ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'],
 };
 
 const paintSlice = createSlice({
   name: 'paint',
   initialState,
   reducers: {
-    setCurrentTool: (state, action: PayloadAction<string>) => {
-      state.currentTool = action.payload;
+    setBrushColor: (state, action: PayloadAction<string>) => {
+      state.brushColor = action.payload;
+      // Adiciona às cores recentes se ainda não estiver lá
+      if (!state.recentColors.includes(action.payload)) {
+        state.recentColors.unshift(action.payload);
+        // Mantém apenas as últimas 10 cores recentes
+        if (state.recentColors.length > 10) {
+          state.recentColors.pop();
+        }
+      }
     },
     setBrushSize: (state, action: PayloadAction<number>) => {
       state.brushSize = action.payload;
@@ -45,60 +48,47 @@ const paintSlice = createSlice({
     setOpacity: (state, action: PayloadAction<number>) => {
       state.opacity = action.payload;
     },
-    setCurrentColor: (state, action: PayloadAction<string>) => {
-      state.currentColor = action.payload;
-      // Add to recent colors if not already present
-      if (!state.recentColors.includes(action.payload)) {
-        state.recentColors = [action.payload, ...state.recentColors.slice(0, 5)];
-      }
+    setCurrentTool: (state, action: PayloadAction<Tool>) => {
+      state.currentTool = action.payload;
     },
-    addToHistory: (state, action: PayloadAction<string>) => {
-      // Remove any history after current index
-      state.canvasHistory = state.canvasHistory.slice(0, state.historyIndex + 1);
-      state.canvasHistory.push(action.payload);
-      state.historyIndex = state.canvasHistory.length - 1;
-      // Limit history to 50 steps
-      if (state.canvasHistory.length > 50) {
-        state.canvasHistory = state.canvasHistory.slice(-50);
-        state.historyIndex = state.canvasHistory.length - 1;
-      }
+    // Reducers para gerenciamento de histórico
+    saveStateForUndo: (state, action: PayloadAction<string>) => {
+      // Quando um novo estado é salvo, descarta qualquer histórico de "refazer"
+      const newHistory = state.canvasHistory.slice(0, state.historyIndex + 1);
+      newHistory.push(action.payload);
+      state.canvasHistory = newHistory;
+      state.historyIndex = newHistory.length - 1;
     },
     undo: (state) => {
       if (state.historyIndex > 0) {
-        state.historyIndex--;
+        state.historyIndex -= 1;
       }
     },
     redo: (state) => {
       if (state.historyIndex < state.canvasHistory.length - 1) {
-        state.historyIndex++;
+        state.historyIndex += 1;
       }
     },
-    setIsDrawing: (state, action: PayloadAction<boolean>) => {
-      state.isDrawing = action.payload;
-    },
-    clearCanvas: (state) => {
-      state.canvasHistory = [];
-      state.historyIndex = -1;
+    // Esta ação reinicia o histórico, limpando o estado do canvas
+    clearCanvasHistory: (state) => {
+        // Mantemos o primeiro estado (o canvas em branco) e reiniciamos o índice
+        if (state.canvasHistory.length > 0) {
+            state.canvasHistory = [state.canvasHistory[0]];
+            state.historyIndex = 0;
+        } else {
+            state.canvasHistory = [];
+            state.historyIndex = -1;
+        }
     }
-  }
+  },
 });
 
-export const {
-  setCurrentTool,
-  setBrushSize,
-  setOpacity,
-  setCurrentColor,
-  addToHistory,
-  undo,
-  redo,
-  setIsDrawing,
-  clearCanvas
-} = paintSlice.actions;
+export const { setBrushColor, setBrushSize, setOpacity, setCurrentTool, saveStateForUndo, undo, redo, clearCanvasHistory } = paintSlice.actions;
 
 export const store = configureStore({
   reducer: {
-    paint: paintSlice.reducer
-  }
+    paint: paintSlice.reducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

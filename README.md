@@ -1,122 +1,75 @@
-# 🎨 Aplicação de Pintura Digital
+# 🎨 Paint Application
 
-Uma aplicação de pintura digital completa e funcional desenvolvida com React, TypeScript e Material-UI. Permite aos usuários criar desenhos e pinturas digitais com diversas ferramentas e opções de personalização.
+Uma aplicação de pintura simples e moderna, construída para a web. Permite desenhar livremente em um canvas digital com diversas ferramentas e opções de personalização. Este projeto foi desenvolvido como um estudo prático de tecnologias front-end modernas.
 
-## 📋 Funcionalidades
 
-### 🖌️ Ferramentas de Desenho
-- **Pincel**: Ferramenta principal para pintura com traços suaves
-- **Lápis**: Ferramenta para desenhos precisos com traços definidos
-- **Borracha**: Remove partes do desenho
 
-### 🎨 Sistema de Cores
-- **Paleta de Gradientes**: Cores organizadas em gradientes predefinidos
-- **Cores Recentes**: Acesso rápido às últimas cores utilizadas
-- **Cor Personalizada**: Entrada manual de cores em formato hexadecimal
-- **Seletor de Cor Visual**: Interface intuitiva para escolha de cores
+---
 
-### ⚙️ Configurações do Pincel
-- **Tamanho**: Ajustável de 1px a 50px
-- **Opacidade**: Controle de transparência de 10% a 100%
-- **Configurações Dinâmicas**: Ajustes em tempo real
+## ✨ Funcionalidades
 
-### 💾 Operações de Arquivo
-- **Novo Canvas**: Limpa a tela para um novo desenho
-- **Salvar**: Download da imagem em formato PNG
-- **Limpar**: Remove todo o conteúdo do canvas
-- **Desfazer/Refazer**: Histórico de até 50 ações
+*   **Ferramentas de Desenho:** Pincel, Lápis e Borracha para diferentes estilos de traço.
+*   **Configurações do Pincel:** Ajuste o **tamanho** e a **opacidade** para obter o efeito desejado.
+*   **Seletor de Cores Completo:** Escolha cores de uma paleta pré-definida, use cores recentes ou insira um código hexadecimal customizado.
+*   **Gerenciamento de Arquivo:**
+    *   **New:** Comece um novo desenho em uma tela em branco.
+    *   **Save:** Salve sua arte como um arquivo `.png` no seu dispositivo.
+    *   **Clear:** Limpe completamente a área de desenho.
+*   **Histórico de Ações:** Desfaça (`Undo`) e refaça (`Redo`) seus traços com facilidade.
 
-## 🏗️ Arquitetura do Projeto
-
-### 📁 Hierarquia de Arquivos (por importância)
-
-```
-📦 Paint Application
-├── 🔴 CRÍTICOS (Core da Aplicação)
-│   ├── App.paintapp.tsx              # Ponto de entrada principal
-│   ├── src/components/PaintApp.tsx   # Componente raiz com providers
-│   ├── src/store/paintStore.ts       # Gerenciamento de estado global
-│   └── src/hooks/useCanvas.ts        # Lógica principal do canvas
-│
-├── 🟡 PRINCIPAIS (Interface Principal)
-│   ├── src/components/PaintCanvas.tsx # Área de desenho (Canvas HTML5)
-│   ├── src/components/Toolbox.tsx     # Barra de ferramentas lateral
-│   ├── src/components/MenuBar.tsx     # Menu superior
-│   └── src/components/ColorPicker.tsx # Seletor de cores
-│
-├── 🟢 SECUNDÁRIOS (Componentes Reutilizáveis)
-│   ├── src/components/BrushSettings.tsx # Configurações do pincel
-│   ├── src/components/ToolButton.tsx    # Botão de ferramenta
-│   └── src/components/ColorSwatch.tsx   # Amostra de cor individual
-│
-├── 🔵 SUPORTE (Configuração e Utilitários)
-│   ├── src/theme/theme.ts            # Tema Material-UI
-│   ├── src/types/enums.ts            # Definições de tipos
-│   ├── src/utils/formatters.ts       # Funções de formatação
-│   ├── src/paintAppMockData.ts       # Dados de exemplo
-│   └── index.css                     # Estilos globais
-```
+---
 
 ## 🚀 Tecnologias Utilizadas
 
-- **React 19** - Biblioteca principal para interface
-- **TypeScript** - Tipagem estática
-- **Material-UI v7** - Componentes de interface
-- **Redux Toolkit** - Gerenciamento de estado
-- **HTML5 Canvas** - Área de desenho
-- **Emotion** - Estilização CSS-in-JS
+O projeto foi construído utilizando um conjunto de tecnologias modernas para o desenvolvimento web:
 
-## 🎯 Como Usar
-
-### Ferramentas de Desenho
-1. **Selecione uma ferramenta** na barra lateral esquerda
-2. **Ajuste o tamanho** do pincel usando o controle deslizante
-3. **Configure a opacidade** conforme desejado
-4. **Escolha uma cor** na paleta ou use o seletor personalizado
-
-### Desenhando
-1. **Clique e arraste** no canvas para desenhar
-2. **Use diferentes ferramentas** para efeitos variados
-3. **Ajuste configurações** em tempo real durante o desenho
-
-### Salvando o Trabalho
-1. **Clique em "Salvar"** no menu superior
-2. **O arquivo será baixado** automaticamente como PNG
-3. **Use "Desfazer/Refazer"** para corrigir erros
-
-## 🔧 Estrutura Técnica
-
-### Gerenciamento de Estado
-- **Redux Store** centraliza todo o estado da aplicação
-- **Hooks customizados** para lógica específica do canvas
-- **Estado reativo** que atualiza a interface automaticamente
-
-### Canvas HTML5
-- **Renderização em tempo real** dos traços
-- **Diferentes modos de composição** para ferramentas
-- **Histórico de ações** para desfazer/refazer
-- **Exportação** em formato de imagem
-
-### Interface Responsiva
-- **Layout flexível** que se adapta a diferentes telas
-- **Componentes reutilizáveis** para consistência
-- **Tema personalizado** com cores modernas
-
-## 🎨 Paleta de Cores
-
-A aplicação inclui uma paleta de cores gradiente organizada em:
-- **Vermelhos**: Do vermelho puro aos tons pastéis
-- **Verdes**: Variações de verde em diferentes intensidades
-- **Azuis**: Tons de azul do escuro ao claro
-- **Amarelos**: Gradientes de amarelo
-- **Magentas**: Tons de rosa e magenta
-- **Cianos**: Variações de azul-ciano
-- **Cinzas**: Escala de cinzas do preto ao branco
-
-## 📱 Compatibilidade
-
-- **Navegadores Modernos**: Chrome, Firefox, Safari, Edge
-- **Dispositivos**: Desktop e tablet (otimizado para mouse)
-- **Resolução**: Funciona em diferentes tamanhos de tela
+-   **React:** Biblioteca principal para a construção da interface de usuário.
+-   **TypeScript:** Adiciona tipagem estática ao JavaScript, tornando o código mais robusto e previsível.
+-   **Redux Toolkit:** Para o gerenciamento centralizado do estado da aplicação (ferramenta atual, cor, tamanho do pincel, etc.).
+-   **Material-UI (MUI):** Biblioteca de componentes de UI para um design limpo e consistente.
+-   **Vite:** Ferramenta de build e servidor de desenvolvimento extremamente rápido.
 
 ---
+
+## ⚙️ Como Executar o Projeto Localmente
+
+Para rodar este projeto na sua máquina, siga os passos abaixo.
+
+**Pré-requisitos:**
+-   Node.js (versão 16 ou superior)
+-   `npm` ou `yarn` como gerenciador de pacotes
+
+**Passos:**
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/seu-usuario/nome-do-repositorio.git
+    ```
+
+2.  **Navegue até a pasta do projeto:**
+    ```bash
+    cd nome-do-repositorio
+    ```
+
+3.  **Instale as dependências:**
+    ```bash
+    npm install
+    ```
+
+4.  **Inicie o servidor de desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
+
+5.  Abra o endereço `http://localhost:5173` (ou a porta indicada no terminal) no seu navegador para ver a aplicação funcionando.
+
+---
+
+## 📝 Como Funciona
+
+A aplicação é uma **Single Page Application (SPA)**. A lógica principal está dividida em:
+
+-   **Componentes React (`/src/components`):** Cada parte da interface (barra de menu, caixa de ferramentas, canvas) é um componente isolado.
+-   **Hook `useCanvas` (`/src/hooks`):** Centraliza toda a lógica de manipulação do canvas HTML5, como desenhar, apagar, limpar e salvar.
+-   **Redux Store (`/src/store`):** Atua como um "cérebro" central, guardando informações globais como a ferramenta selecionada, a cor atual e o histórico de ações para o undo/redo. Quando uma ferramenta é alterada na `Toolbox`, o Redux informa o `Canvas` sobre a mudança.
+

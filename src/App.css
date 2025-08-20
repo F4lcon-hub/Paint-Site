@@ -1,0 +1,40 @@
+.app-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+}
+
+.toolbar {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem; /* Espaçamento entre os botões */
+}
+
+.toolbar button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.toolbar button:hover {
+  background-color: #e0e0e0;
+}
+
+.paint-canvas {
+  /* O fundo branco é definido via JavaScript, mas a borda ajuda a visualizá-lo */
+  border: 2px solid #555;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  cursor: crosshair; /* Muda o cursor para uma cruz ao passar sobre o canvas */
+}

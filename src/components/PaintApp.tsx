@@ -24,7 +24,14 @@ import { useCanvas } from '../hooks/useCanvas';
  * Organiza o layout em: MenuBar (topo) + Toolbox (esquerda) + Canvas (centro)
  */
 const PaintAppContent: React.FC = () => {
-  const { clearCanvas, saveCanvas } = useCanvas();
+  const {
+    canvasRef,
+    startDrawing,
+    draw,
+    stopDrawing,
+    clearCanvas,
+    saveCanvas,
+  } = useCanvas();
 
   const handleNewCanvas = () => {
     clearCanvas();
@@ -51,7 +58,12 @@ const PaintAppContent: React.FC = () => {
           <Toolbox />
         </Box>
         
-        <PaintCanvas />
+        <PaintCanvas
+          canvasRef={canvasRef}
+          startDrawing={startDrawing}
+          draw={draw}
+          stopDrawing={stopDrawing}
+        />
       </Stack>
     </Box>
   );

@@ -7,17 +7,24 @@
  * - Entrada de cor customizada (hex)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Paper, Typography, Stack, Box, TextField, Button } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, setCurrentColor } from '../store/paintStore';
+import { RootState, setBrushColor } from '../store/paintStore';
 import ColorSwatch from './ColorSwatch';
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 
 const ColorPicker: React.FC = () => {
   const dispatch = useDispatch();
-  const { currentColor, recentColors } = useSelector((state: RootState) => state.paint);
-  const [customColor, setCustomColor] = useState('#000000');
+  const { brushColor, recentColors } = useSelector((state: RootState) => state.paint);
+  const [customColor, setCustomColor] = useState(brushColor);
+  const [isCustomColorValid, setIsCustomColorValid] = useState(true);
+
+  // Efeito para sincronizar o estado local com o estado global do Redux.
+  // Isso garante que o seletor de cor customizada sempre mostre a cor atual.
+  useEffect(() => {
+    setCustomColor(brushColor);
+  }, [brushColor]);
 
   // Gradient color palette
   const gradientColors = [
@@ -30,24 +37,40 @@ const ColorPicker: React.FC = () => {
     ['#000000', '#333333', '#666666', '#999999', '#CCCCCC']
   ];
 
-  const handleColorSelect = (color: string) => {
-    dispatch(setCurrentColor(color));
+  // Usamos useCallback para otimizar a performance, evitando recriar a função a cada renderização.
+  const handleColorSelect = useCallback((color: string) => {
+      dispatch(setBrushColor(color));
+    }, [dispatch]);
+
+  // Handler para o campo de texto. Atualiza o estado local e valida.
+  const handleCustomColorTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newColor = event.target.value;
+    setCustomColor(newColor);
+    // Valida o formato da cor em tempo real
+    setIsCustomColorValid(/^#([0-9A-F]{3}){1,2}$/i.test(newColor));
   };
 
-  const handleCustomColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Handler para o seletor de cores nativo. Atualiza o estado e assume que a cor é válida.
+  const handleNativeColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCustomColor(event.target.value);
+    setIsCustomColorValid(true);
   };
 
-  const handleCustomColorApply = () => {
-    dispatch(setCurrentColor(customColor));
-  };
+  const handleCustomColorApply = useCallback(() => {
+    // Aplica a cor apenas se ela for válida
+    if (isCustomColorValid) {
+      dispatch(setBrushColor(customColor));
+    } else {
+      console.warn('Formato de cor inválido. Use o formato #RRGGBB ou #RGB.');
+    }
+  }, [customColor, dispatch, isCustomColorValid]);
 
   return (
     <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
         <PaletteOutlinedIcon color="primary" />
         <Typography variant="h6">
-          Color Picker
+          Seletor de Cores
         </Typography>
       </Stack>
       
@@ -55,13 +78,16 @@ const ColorPicker: React.FC = () => {
         {/* Current Color Display */}
         <Box>
           <Typography variant="body2" gutterBottom>
-            Current Color
+            Cor Atual
           </Typography>
-          <ColorSwatch
-            color={currentColor}
-            selected={true}
-            onClick={() => {}}
-            size="medium"
+          <Box
+            sx={{
+              width: (theme) => theme.spacing(4),
+              height: (theme) => theme.spacing(4),
+              backgroundColor: brushColor,
+              borderRadius: 1,
+              border: (theme) => `2px solid ${theme.palette.divider}`,
+            }}
           />
         </Box>
 
@@ -69,14 +95,14 @@ const ColorPicker: React.FC = () => {
         {recentColors.length > 0 && (
           <Box>
             <Typography variant="body2" gutterBottom>
-              Recent Colors
+              Cores Recentes
             </Typography>
             <Stack direction="row" spacing={1} flexWrap="wrap">
-              {recentColors.map((color, index) => (
+              {recentColors.map((color) => (
                 <ColorSwatch
-                  key={index}
+                  key={color}
                   color={color}
-                  selected={color === currentColor}
+                  selected={color.toLowerCase() === brushColor.toLowerCase()}
                   onClick={() => handleColorSelect(color)}
                   size="small"
                 />
@@ -88,7 +114,7 @@ const ColorPicker: React.FC = () => {
         {/* Gradient Color Palette */}
         <Box>
           <Typography variant="body2" gutterBottom>
-            Color Palette
+            Paleta de Cores
           </Typography>
           <Stack spacing={1}>
             {gradientColors.map((row, rowIndex) => (
@@ -97,7 +123,7 @@ const ColorPicker: React.FC = () => {
                   <ColorSwatch
                     key={`${rowIndex}-${colIndex}`}
                     color={color}
-                    selected={color === currentColor}
+                    selected={color.toLowerCase() === brushColor.toLowerCase()}
                     onClick={() => handleColorSelect(color)}
                     size="small"
                   />
@@ -110,29 +136,31 @@ const ColorPicker: React.FC = () => {
         {/* Custom Color Input */}
         <Box>
           <Typography variant="body2" gutterBottom>
-            Custom Color
+            Cor Customizada
           </Typography>
           <Stack direction="row" spacing={1} alignItems="center">
             <TextField
               type="color"
-              value={customColor}
-              onChange={handleCustomColorChange}
+              value={isCustomColorValid ? customColor : '#000000'} // Evita passar valor inválido para o input
+              onChange={handleNativeColorChange}
               size="small"
               sx={{ width: '60px' }}
             />
             <TextField
               value={customColor}
-              onChange={handleCustomColorChange}
+              onChange={handleCustomColorTextChange}
               size="small"
               placeholder="#000000"
               sx={{ flexGrow: 1 }}
+              error={!isCustomColorValid}
+              helperText={!isCustomColorValid ? 'Formato inválido' : ''}
             />
             <Button
               onClick={handleCustomColorApply}
               variant="outlined"
               size="small"
             >
-              Apply
+              Aplicar
             </Button>
           </Stack>
         </Box>

@@ -5,8 +5,7 @@
  * - Tamanho (1-50px)
  * - Opacidade (10-100%)
  */
-
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Paper, Typography, Slider, Stack, Box } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, setBrushSize, setOpacity } from '../store/paintStore';
@@ -14,26 +13,32 @@ import { formatBrushSize, formatOpacity } from '../utils/formatters';
 
 const BrushSettings: React.FC = () => {
   const dispatch = useDispatch();
-  const { brushSize, opacity, currentTool } = useSelector((state: RootState) => state.paint);
+  const { brushSize, opacity, currentTool } = useSelector(
+    (state: RootState) => state.paint
+  );
 
-  const handleBrushSizeChange = (_: Event, newValue: number | number[]) => {
-    dispatch(setBrushSize(newValue as number));
-  };
+  // Corrige o erro de lógica: desabilita os controles se a ferramenta não for um pincel.
+  const isBrushTool = currentTool === 'brush' || currentTool === 'eraser';
 
-  const handleOpacityChange = (_: Event, newValue: number | number[]) => {
-    dispatch(setOpacity((newValue as number) / 100));
-  };
+  // Corrige o erro de performance: usa useCallback para evitar recriar as funções.
+  const handleBrushSizeChange = useCallback((_: Event, newValue: number | number[]) => {
+      dispatch(setBrushSize(newValue as number));
+    }, [dispatch]);
+
+  const handleOpacityChange = useCallback((_: Event, newValue: number | number[]) => {
+      dispatch(setOpacity((newValue as number) / 100));
+    }, [dispatch]);
 
   return (
     <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
       <Typography variant="h6" gutterBottom>
-        Brush Settings
+        Configurações do Pincel
       </Typography>
       
       <Stack spacing={3}>
         <Box>
           <Typography variant="body2" gutterBottom>
-            Size: {formatBrushSize(brushSize)}
+            Tamanho: {formatBrushSize(brushSize)}
           </Typography>
           <Slider
             value={brushSize}
@@ -42,13 +47,13 @@ const BrushSettings: React.FC = () => {
             max={50}
             step={1}
             size="small"
-            disabled={currentTool === 'eraser'}
+            disabled={!isBrushTool}
           />
         </Box>
         
         <Box>
           <Typography variant="body2" gutterBottom>
-            Opacity: {formatOpacity(opacity)}
+            Opacidade: {formatOpacity(opacity)}
           </Typography>
           <Slider
             value={opacity * 100}
@@ -57,6 +62,7 @@ const BrushSettings: React.FC = () => {
             max={100}
             step={5}
             size="small"
+            disabled={!isBrushTool}
           />
         </Box>
       </Stack>

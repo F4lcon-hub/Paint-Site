@@ -1,21 +1,13 @@
 /**
- * FUNÇÕES UTILITÁRIAS - FORMATADORES DE TEXTO
- * 
- * Funções para formatar valores numéricos em strings
- * legíveis para exibição na interface.
+ * Formata o tamanho do pincel para exibição.
+ * @param size - O tamanho numérico (ex: 5).
+ * @returns A string formatada (ex: "5px").
  */
+export const formatBrushSize = (size: number): string => `${size}px`;
 
-// Formata o tamanho do pincel para exibição
-export const formatBrushSize = (size: number): string => {
-  return `${size}px`;
-};
-
-// Format opacity percentage
-export const formatOpacity = (opacity: number): string => {
-  return `${Math.round(opacity * 100)}%`;
-};
-
-// Format color hex value
-export const formatColorHex = (color: string): string => {
-  return color.toUpperCase();
-};
+/**
+ * Formata a opacidade para exibição.
+ * @param opacity - O valor da opacidade (ex: 0.85).
+ * @returns A string formatada em porcentagem (ex: "85%").
+ */
+export const formatOpacity = (opacity: number): string => `${Math.round(opacity * 100)}%`;

@@ -9,7 +9,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Button, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, undo, redo, clearCanvas } from '../store/paintStore';
+import { RootState, undo, redo } from '../store/paintStore';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
@@ -34,16 +34,11 @@ const MenuBar: React.FC<MenuBarProps> = ({ onNewCanvas, onSaveCanvas, onClearCan
     dispatch(redo());
   };
 
-  const handleClear = () => {
-    dispatch(clearCanvas());
-    onClearCanvas();
-  };
-
   return (
     <AppBar position="static" elevation={1} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'primary.main', fontWeight: 'bold' }}>
-          Paint Application
+          Aplicativo de Pintura
         </Typography>
         
         <Stack direction="row" spacing={1}>
@@ -53,7 +48,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ onNewCanvas, onSaveCanvas, onClearCan
             variant="outlined"
             size="small"
           >
-            New
+            Novo
           </Button>
           
           <Button
@@ -62,17 +57,17 @@ const MenuBar: React.FC<MenuBarProps> = ({ onNewCanvas, onSaveCanvas, onClearCan
             variant="outlined"
             size="small"
           >
-            Save
+            Salvar
           </Button>
           
           <Button
             startIcon={<DeleteForeverOutlinedIcon />}
-            onClick={handleClear}
+            onClick={onClearCanvas}
             variant="outlined"
             size="small"
             color="error"
           >
-            Clear
+            Limpar
           </Button>
           
           <Button
@@ -82,7 +77,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ onNewCanvas, onSaveCanvas, onClearCan
             size="small"
             disabled={historyIndex <= 0}
           >
-            Undo
+            Desfazer
           </Button>
           
           <Button
@@ -92,7 +87,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ onNewCanvas, onSaveCanvas, onClearCan
             size="small"
             disabled={historyIndex >= canvasHistory.length - 1}
           >
-            Redo
+            Refazer
           </Button>
         </Stack>
       </Toolbar>

@@ -8,9 +8,15 @@
 import React, { useCallback } from 'react';
 import { Paper, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useCanvas } from '../hooks/useCanvas';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/paintStore';
+
+interface PaintCanvasProps {
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  startDrawing: (x: number, y: number) => void;
+  draw: (x: number, y: number) => void;
+  stopDrawing: () => void;
+}
 
 const CanvasContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -38,8 +44,12 @@ const StyledCanvas = styled('canvas')(({ theme }) => ({
   }
 }));
 
-const PaintCanvas: React.FC = () => {
-  const { canvasRef, startDrawing, draw, stopDrawing } = useCanvas();
+const PaintCanvas: React.FC<PaintCanvasProps> = ({
+  canvasRef,
+  startDrawing,
+  draw,
+  stopDrawing,
+}) => {
   const { currentTool } = useSelector((state: RootState) => state.paint);
 
   const getMousePos = useCallback((canvas: HTMLCanvasElement, e: React.MouseEvent) => {

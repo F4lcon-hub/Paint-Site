@@ -10,13 +10,13 @@
 import React from 'react';
 import { Paper, Typography, Stack } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, setCurrentTool } from '../store/paintStore';
+import { RootState, setCurrentTool, Tool } from '../store/paintStore';
 import ToolButton from './ToolButton';
 import BrushSettings from './BrushSettings';
 import ColorPicker from './ColorPicker';
 import BrushOutlinedIcon from '@mui/icons-material/BrushOutlined';
-import ScreenRotationOutlinedIcon from '@mui/icons-material/ScreenRotationOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import CropSquareOutlinedIcon from '@mui/icons-material/CropSquareOutlined'; // Ícone mais intuitivo para a borracha
 
 const Toolbox: React.FC = () => {
   const dispatch = useDispatch();
@@ -24,23 +24,23 @@ const Toolbox: React.FC = () => {
 
   const tools = [
     {
-      id: 'brush',
-      label: 'Brush',
+      id: 'brush' as Tool,
+      label: 'Pincel',
       icon: <BrushOutlinedIcon />
     },
     {
-      id: 'pencil',
-      label: 'Pencil',
+      id: 'pencil' as Tool,
+      label: 'Lápis',
       icon: <ModeEditOutlineOutlinedIcon />
     },
     {
-      id: 'eraser',
-      label: 'Eraser',
-      icon: <ScreenRotationOutlinedIcon />
+      id: 'eraser' as Tool,
+      label: 'Borracha',
+      icon: <CropSquareOutlinedIcon />
     }
   ];
 
-  const handleToolSelect = (toolId: string) => {
+  const handleToolSelect = (toolId: Tool) => {
     dispatch(setCurrentTool(toolId));
   };
 
@@ -49,7 +49,7 @@ const Toolbox: React.FC = () => {
       {/* Tools Section */}
       <Paper elevation={2} sx={{ p: 2 }}>
         <Typography variant="h6" gutterBottom>
-          Tools
+          Ferramentas
         </Typography>
         <Stack direction="row" spacing={1} flexWrap="wrap">
           {tools.map((tool) => (
